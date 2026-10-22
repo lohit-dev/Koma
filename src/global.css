@@ -1,0 +1,50 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@import "nativewind/theme";
+
+/*
+ * Koma design tokens. The single source of truth for colour, type and shape.
+ * Use them as classes: bg-ground, text-muted, bg-gold, rounded-card, font-display, shadow-pop.
+ * Spacing is Tailwind's default 4px scale (gutter 24px = px-6, button height 64px = h-16).
+ */
+@theme {
+  --color-*: initial;
+  --color-ground: #151515;
+  --color-ray: #202020;
+  --color-surface: #232323;
+  --color-surface-2: #2d2d2d;
+  --color-line: #2e2e2e;
+  --color-dim: #4a4a4a;
+  --color-text: #f4f2ec;
+  --color-muted: #a3a09a;
+  --color-gold: #ffc83d;
+  --color-gold-dark: #8a6a10;
+  --color-gold-ink: #4a3a08;
+  --color-ink: #111111;
+  --color-paper: #f2efe6;
+  --color-danger: #e8a09a;
+
+  /* One family per weight: fonts are embedded per file, named by PostScript name. */
+  --font-display: Bangers_400Regular;
+  --font-sans: Poppins_400Regular;
+  --font-sans-medium: Poppins_500Medium;
+  --font-sans-semibold: Poppins_600SemiBold;
+  --font-jp: ZenMaruGothic_500Medium;
+  --font-jp-bold: ZenMaruGothic_700Bold;
+
+  --text-display: 104px;
+  --text-title: 40px;
+  --text-heading: 34px;
+  --text-button: 30px;
+
+  --radius-tile: 14px;
+  --radius-btn: 20px;
+  --radius-card: 22px;
+  --radius-hero: 28px;
+  --radius-sheet: 32px;
+
+  /* The hard "manga print" drop shadow under paper cards and CTAs. */
+  --shadow-pop: 0 6px 0 #8a6a10;
+  --shadow-pop-lg: 0 8px 0 #8a6a10;
+}

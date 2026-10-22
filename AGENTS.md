@@ -39,3 +39,12 @@ Docs: https://docs.expo.dev/eas/index.md
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+
+## Koma project conventions
+
+- Styling: NativeWind v5 (Tailwind 4). Design tokens live in `src/global.css` under `@theme`; use classes (`bg-ground`, `text-muted`, `bg-gold`, `rounded-card`, `font-display`, `shadow-pop`). Never hardcode colours in screens. Merge conditional classes with `cn()`.
+- Layout of `src/`: `app/` routes only · `components/ui/` shared primitives (Screen, Text, Button, Rays) · `features/<name>/` screen-specific components and hooks · `db/` Drizzle schema and client · `lib/` helpers (query, srs, purchases, haptics) · `store/` Zustand.
+- Data: `user.db` (progress, FSRS cards) through Drizzle; after changing `src/db/schema.ts` run `bun run db:generate`. Content (words, kanji, strips) lives in a separate read-only `content.db`. Reads go through React Query, and writes invalidate keys from `lib/query.ts`.
+- Settings are in the persisted Zustand store (`store/settings.ts`). Plus status comes from `usePlus()` (RevenueCat, anonymous, entitlement `plus`).
+- No bottom tab bar anywhere: Home is the hub, with close/back buttons on every screen.
+- Fonts are copied into `assets/fonts` on postinstall (not committed). `bun run typecheck` and `bun run lint` must pass.

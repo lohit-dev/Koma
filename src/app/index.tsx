@@ -1,17 +1,7 @@
-import { Text, View, StyleSheet } from "react-native";
+import { useSettings } from "@/store/settings";
+import { Redirect } from "expo-router";
 
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text>Edit src/app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+  const onboarded = useSettings((s) => s.onboarded);
+  return <Redirect href={onboarded ? "/home" : "/welcome"} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
