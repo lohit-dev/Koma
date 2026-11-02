@@ -1,6 +1,8 @@
 /** JS mirror of the few tokens SVG needs (SVG can't take classes). Keep in sync with src/global.css. */
 export const colors = {
   ground: "#151515",
+  dim: "#4a4a4a",
+  ray: "#202020",
   text: "#f4f2ec",
   muted: "#a3a09a",
   gold: "#ffc83d",

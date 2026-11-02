@@ -1,9 +1,10 @@
 import { Pressable, View } from "react-native";
+import Animated, { ReduceMotion, ZoomIn } from "react-native-reanimated";
 import { BackButton } from "@/components/ui/back-button";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { colors } from "@/lib/colors";
 import { cn } from "@/lib/cn";
+import { colors } from "@/lib/colors";
 import { tap } from "@/lib/haptics";
 
 export const STEPS = 3;
@@ -18,7 +19,7 @@ export function StepHeader({ step }: { step: 1 | 2 | 3 }) {
           <View
             key={i}
             className={cn(
-              "h-1.5 flex-1 rounded-full",
+              "h-1.5 flex-1 rounded-full transition-colors duration-300",
               i < step ? "bg-gold" : "bg-dim",
             )}
           />
@@ -52,7 +53,21 @@ type ChoiceProps = {
   badge?: string;
 };
 
-/** A single-select row. Gold when selected. */
+const press = "transition-transform duration-100 active:scale-[0.97]";
+
+function Check({ size }: { size: number }) {
+  return (
+    <Animated.View
+      entering={ZoomIn.springify()
+        .damping(12)
+        .reduceMotion(ReduceMotion.System)}
+    >
+      <Icon name="check" size={size} color={colors.ink} strokeWidth={3.2} />
+    </Animated.View>
+  );
+}
+
+/** A single-select row. Gold when selected. Large rows take "bold line|muted line" as subtitle. */
 export function Choice({
   title,
   subtitle,
@@ -61,6 +76,7 @@ export function Choice({
   large,
   badge,
 }: ChoiceProps) {
+  const [bold, muted] = large ? subtitle.split("|") : [undefined, subtitle];
   return (
     <Pressable
       accessibilityRole="radio"
@@ -70,8 +86,9 @@ export function Choice({
         onPress();
       }}
       className={cn(
-        "flex-row items-center justify-between rounded-card px-5",
-        large ? "h-24" : "h-[62px] rounded-2xl px-[18px]",
+        "flex-row items-center justify-between",
+        press,
+        large ? "h-24 rounded-card px-5" : "h-[62px] rounded-2xl px-[18px]",
         selected ? "bg-gold" : "bg-surface",
       )}
     >
@@ -88,29 +105,22 @@ export function Choice({
             {title}
           </Text>
         )}
-        {large && (
+        {bold && (
           <Text
             variant="strong"
             className={cn("text-sm", selected && "text-ink")}
           >
-            {subtitle.split("|")[0]}
+            {bold}
           </Text>
         )}
         <Text
           variant="muted"
           className={cn("text-[13px]", selected && "text-gold-ink")}
         >
-          {large ? subtitle.split("|")[1] : subtitle}
+          {muted}
         </Text>
       </View>
-      {selected && (
-        <Icon
-          name="check"
-          size={large ? 26 : 22}
-          color={colors.ink}
-          strokeWidth={3.2}
-        />
-      )}
+      {selected && <Check size={large ? 26 : 22} />}
       {badge && (
         <View className="absolute -top-3 right-4 rotate-3 rounded-md bg-ink px-2 pb-0.5 pt-1">
           <Text
@@ -125,7 +135,7 @@ export function Choice({
   );
 }
 
-/** Compact square-ish choice, used for the three starting levels. */
+/** Compact choice, used for the three starting levels. */
 export function Tile({
   title,
   subtitle,
@@ -142,6 +152,7 @@ export function Tile({
       }}
       className={cn(
         "h-[78px] flex-1 items-center justify-center rounded-2xl",
+        press,
         selected ? "bg-gold" : "bg-surface",
       )}
     >

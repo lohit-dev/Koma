@@ -27,7 +27,7 @@ export function Button({
     <Pressable
       accessibilityRole="button"
       className={cn(
-        "h-16 flex-row items-center justify-center gap-2.5 rounded-btn active:opacity-80",
+        "h-16 flex-row items-center justify-center gap-2.5 rounded-btn transition-transform duration-100 active:scale-[0.97]",
         s.box,
         className as string,
       )}

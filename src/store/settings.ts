@@ -9,12 +9,19 @@ const sync = {
   removeItem: (key: string) => Storage.removeItemSync(key),
 };
 
+export type Reminder = {
+  enabled: boolean;
+  hour: number;
+  minute: number;
+  saver: boolean;
+};
+
 type Settings = {
   onboarded: boolean;
   goal: "anime" | "travel" | "jlpt" | "work";
   level: "zero" | "kana" | "n5";
   dailyMinutes: 5 | 10 | 20;
-  reminder: { enabled: boolean; hour: number; minute: number; saver: boolean };
+  reminder: Reminder;
   furigana: boolean;
   sound: boolean;
   haptics: boolean;

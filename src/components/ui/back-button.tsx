@@ -14,7 +14,7 @@ export function BackButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={icon === "close" ? "Close" : "Back"}
-      className="size-12 items-center justify-center rounded-full bg-surface active:opacity-70"
+      className="size-12 items-center justify-center rounded-full bg-surface transition-transform duration-100 active:scale-90"
       onPress={onPress ?? (() => router.back())}
     >
       <Icon name={icon} size={22} />

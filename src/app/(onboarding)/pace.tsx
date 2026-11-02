@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { router } from "expo-router";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/reveal";
 import { Screen } from "@/components/ui/screen";
 import { Choice, Heading, StepHeader } from "@/features/onboarding/parts";
 import { useSettings } from "@/store/settings";
@@ -29,27 +30,32 @@ export default function Pace() {
 
   return (
     <Screen>
-      <StepHeader step={2} />
-      <Heading
-        title="DAILY GOAL"
-        subtitle="Small and steady beats big and rare."
-      />
+      <Reveal>
+        <StepHeader step={2} />
+      </Reveal>
+      <Reveal index={1}>
+        <Heading
+          title="DAILY GOAL"
+          subtitle="Small and steady beats big and rare."
+        />
+      </Reveal>
+
       <View className="mt-8 gap-4">
-        {paces.map(({ minutes, ...p }) => (
-          <Choice
-            key={minutes}
-            large
-            {...p}
-            selected={dailyMinutes === minutes}
-            onPress={() => useSettings.setState({ dailyMinutes: minutes })}
-          />
+        {paces.map(({ minutes, ...p }, i) => (
+          <Reveal key={minutes} index={2 + i}>
+            <Choice
+              large
+              {...p}
+              selected={dailyMinutes === minutes}
+              onPress={() => useSettings.setState({ dailyMinutes: minutes })}
+            />
+          </Reveal>
         ))}
       </View>
-      <Button
-        className="mt-auto"
-        label="CONTINUE"
-        onPress={() => router.push("/remind")}
-      />
+
+      <Reveal pin index={5}>
+        <Button label="CONTINUE" onPress={() => router.push("/remind")} />
+      </Reveal>
     </Screen>
   );
 }

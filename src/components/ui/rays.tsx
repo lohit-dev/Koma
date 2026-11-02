@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { colors } from "@/lib/colors";
 
-/** Manga speed-line backdrop (color matches --color-ray): thin wedges fanning out from a point (x, y as 0..1 of the screen). */
+/** Manga speed-line backdrop: thin wedges fanning out from a point (x, y as 0..1 of the screen). */
 export function Rays({
   x = 0.5,
   y = 0.3,
   count = 60,
-  color = "#202020",
+  color = colors.ray,
 }: {
   x?: number;
   y?: number;

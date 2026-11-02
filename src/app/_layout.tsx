@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import { colors } from "@/lib/colors";
 import { fonts } from "@/lib/fonts";
 import { initPurchases } from "@/lib/purchases";
 import { queryClient } from "@/lib/query";
@@ -19,8 +20,6 @@ initPurchases();
 export default function RootLayout() {
   const { success, error } = useMigrations(db, migrations);
   const [fontsLoaded, fontError] = useFonts(fonts);
-  console.log("[Layout] migrations success:", success, "error:", error);
-  console.log("[Layout] fontsLoaded:", fontsLoaded, "fontError:", fontError);
   if (fontError) throw fontError;
   const ready = success && fontsLoaded;
 
@@ -34,15 +33,27 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <GestureHandlerRootView className="flex-1" style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="light" />
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#151515" },
+            animation: "slide_from_right",
+            contentStyle: { backgroundColor: colors.ground },
           }}
-        />
+        >
+          <Stack.Screen name="index" options={{ animation: "none" }} />
+          <Stack.Screen
+            name="(onboarding)/welcome"
+            options={{ animation: "fade" }}
+          />
+          {/* Home is the root of the app: fade in and never swipe back into onboarding. */}
+          <Stack.Screen
+            name="(app)/home"
+            options={{ animation: "fade", gestureEnabled: false }}
+          />
+        </Stack>
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

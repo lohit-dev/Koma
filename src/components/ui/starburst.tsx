@@ -1,8 +1,19 @@
+import { useEffect, type ReactNode } from "react";
 import { Pressable, View, type PressableProps } from "react-native";
+import Animated, {
+  ReduceMotion,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+  ZoomIn,
+} from "react-native-reanimated";
 import Svg, { Polygon } from "react-native-svg";
 import { colors } from "@/lib/colors";
 import { tap } from "@/lib/haptics";
-import type { ReactNode } from "react";
 
 /** Jagged comic-burst outline. Deterministic jitter, so it never changes between renders. */
 const burst = (w: number, h: number, spikes = 30) =>
@@ -37,24 +48,54 @@ export function Starburst({
   );
 }
 
-/** The big tilted call-to-action. */
+/** The big tilted call-to-action: springs in, then breathes gently to draw the eye. */
 export function BurstButton({
   children,
+  onPress,
   ...props
 }: PressableProps & { children: ReactNode }) {
+  const scale = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    scale.value = withDelay(
+      1400,
+      withRepeat(
+        withSequence(
+          withTiming(1.04, { duration: 800 }),
+          withTiming(1, { duration: 800 }),
+        ),
+        -1,
+      ),
+    );
+  }, [reduceMotion, scale]);
+
+  const breathe = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
-    <Pressable
-      accessibilityRole="button"
-      className="-rotate-2 self-center active:scale-95"
-      {...props}
-      onPress={(e) => {
-        tap();
-        props.onPress?.(e);
-      }}
+    <Animated.View
+      entering={ZoomIn.springify()
+        .damping(12)
+        .delay(500)
+        .reduceMotion(ReduceMotion.System)}
+      style={breathe}
     >
-      <Starburst width={312} height={96}>
-        {children}
-      </Starburst>
-    </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        className="-rotate-2 self-center transition-transform duration-100 active:scale-95"
+        onPress={(e) => {
+          tap();
+          onPress?.(e);
+        }}
+        {...props}
+      >
+        <Starburst width={312} height={96}>
+          {children}
+        </Starburst>
+      </Pressable>
+    </Animated.View>
   );
 }

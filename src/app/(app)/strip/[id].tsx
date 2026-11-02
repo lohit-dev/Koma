@@ -1,4 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
+import { Reveal } from "@/components/ui/reveal";
 import { Screen } from "@/components/ui/screen";
 import { Text } from "@/components/ui/text";
 
@@ -7,7 +8,9 @@ export default function Strip() {
   const { id } = useLocalSearchParams<{ id: string }>();
   return (
     <Screen rays className="items-center justify-center">
-      <Text variant="display">STRIP {id}</Text>
+      <Reveal zoom>
+        <Text variant="display">STRIP {id}</Text>
+      </Reveal>
     </Screen>
   );
 }

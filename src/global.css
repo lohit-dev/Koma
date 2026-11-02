@@ -5,7 +5,8 @@
 
 /*
  * Koma design tokens. The single source of truth for colour, type and shape.
- * Use them as classes: bg-ground, text-muted, bg-gold, rounded-card, font-display, shadow-pop.
+ * Use them as classes: bg-ground, text-muted, bg-gold, rounded-card, shadow-pop.
+ * Fonts are not here: set them through <Text variant> (see lib/fonts.ts).
  * Spacing is Tailwind's default 4px scale (gutter 24px = px-6, button height 64px = h-16).
  */
 @theme {
@@ -24,14 +25,6 @@
   --color-ink: #111111;
   --color-paper: #f2efe6;
   --color-danger: #e8a09a;
-
-  /* One family per weight: fonts are embedded per file, named by PostScript name. */
-  --font-display: Bangers_400Regular;
-  --font-sans: Poppins_400Regular;
-  --font-sans-medium: Poppins_500Medium;
-  --font-sans-semibold: Poppins_600SemiBold;
-  --font-jp: ZenMaruGothic_500Medium;
-  --font-jp-bold: ZenMaruGothic_700Bold;
 
   --text-display: 104px;
   --text-title: 40px;

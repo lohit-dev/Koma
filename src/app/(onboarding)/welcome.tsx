@@ -1,15 +1,21 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { router } from "expo-router";
 import { Button } from "@/components/ui/button";
-import { Rays } from "@/components/ui/rays";
+import { Reveal } from "@/components/ui/reveal";
+import { Screen } from "@/components/ui/screen";
 import { Starburst } from "@/components/ui/starburst";
 import { Text } from "@/components/ui/text";
+import { TextLink } from "@/components/ui/text-link";
+import { useContentWidth } from "@/lib/layout";
 import { restorePurchases } from "@/lib/purchases";
 import { useSettings } from "@/store/settings";
 
 const tiles = ["あ", "字", "話"];
 
 export default function Welcome() {
+  // The burst is drawn at 340x246; shrink it on narrow phones so it never overflows.
+  const burstWidth = Math.min(340, useContentWidth() + 16);
+
   const restore = async () => {
     if (await restorePurchases()) {
       useSettings.setState({ onboarded: true });
@@ -18,60 +24,56 @@ export default function Welcome() {
   };
 
   return (
-    <View className="flex-1 bg-ground">
-      <Rays y={0.24} />
-      <View className="flex-1 px-6 pb-10 pt-24">
-        <View className="-rotate-[4deg] items-center">
-          <Starburst width={340} height={246}>
-            <Text
-              variant="display"
-              className="text-display leading-[100px] text-ink"
-            >
-              KOMA
-            </Text>
-            <Text variant="jp" className="text-base text-ink">
-              コマ · learn Japanese in panels
-            </Text>
-          </Starburst>
-        </View>
-
-        <View className="mt-10 items-center gap-1.5">
-          <Text variant="heading" className="text-center">
-            ONE PANEL AT A TIME
-          </Text>
-          <Text variant="muted" className="w-72 text-center">
-            Read manga-style strips, fill the bubble, and the words stay with
-            you.
-          </Text>
-        </View>
-
-        <View className="mt-8 flex-row justify-center gap-5">
-          {tiles.map((t, i) => (
-            <View
-              key={t}
-              className={`h-[98px] w-[78px] items-center justify-center rounded-tile shadow-pop ${i === 1 ? "bg-gold" : "bg-paper"}`}
-              style={{ transform: [{ rotate: `${(i - 1) * 7}deg` }] }}
-            >
-              <Text variant="jp" className="text-5xl text-ink">
-                {t}
+    <Screen rays>
+      <View className="flex-1 justify-center gap-10">
+        <Reveal zoom>
+          <View className="-rotate-[4deg] items-center">
+            <Starburst width={burstWidth} height={(burstWidth * 246) / 340}>
+              <Text
+                variant="display"
+                className="text-display leading-[100px] text-ink"
+              >
+                KOMA
               </Text>
-            </View>
+              <Text variant="jp" className="text-base text-ink">
+                コマ · learn Japanese in panels
+              </Text>
+            </Starburst>
+          </View>
+        </Reveal>
+
+        <Reveal index={3}>
+          <View className="items-center gap-1.5">
+            <Text variant="heading" className="text-center">
+              ONE PANEL AT A TIME
+            </Text>
+            <Text variant="muted" className="w-72 text-center">
+              Read manga-style strips, fill the bubble, and the words stay with
+              you.
+            </Text>
+          </View>
+        </Reveal>
+
+        <View className="flex-row justify-center gap-5">
+          {tiles.map((t, i) => (
+            <Reveal key={t} zoom index={5 + i}>
+              <View
+                className={`h-[98px] w-[78px] items-center justify-center rounded-tile shadow-pop ${i === 1 ? "bg-gold" : "bg-paper"}`}
+                style={{ transform: [{ rotate: `${(i - 1) * 7}deg` }] }}
+              >
+                <Text variant="jp" className="text-5xl text-ink">
+                  {t}
+                </Text>
+              </View>
+            </Reveal>
           ))}
         </View>
-
-        <View className="mt-auto gap-3">
-          <Button label="GET STARTED" onPress={() => router.push("/goal")} />
-          <Pressable
-            accessibilityRole="button"
-            className="h-11 items-center justify-center"
-            onPress={restore}
-          >
-            <Text variant="strong" className="text-sm text-muted">
-              Restore Koma Plus
-            </Text>
-          </Pressable>
-        </View>
       </View>
-    </View>
+
+      <Reveal index={8}>
+        <Button label="GET STARTED" onPress={() => router.push("/goal")} />
+        <TextLink label="Restore Koma Plus" onPress={restore} />
+      </Reveal>
+    </Screen>
   );
 }
